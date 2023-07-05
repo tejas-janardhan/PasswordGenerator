@@ -1,5 +1,5 @@
 .card {
-  min-width: 400px;
+  min-width: 600px;
   width: fit-content;
   height: 300px;
   background-color: rgb(255, 255, 255);
@@ -116,4 +116,48 @@
   width: 5px;
   background: #fff;
   transition: width 150ms ease 100ms;
+}
+
+.length-input {
+  border-radius: 5px;
+  background: rgb(249, 250, 250);
+  border: 1px solid rgb(181, 189, 196);
+  font-size: 16px;
+  height: 30px;
+  line-height: 24px;
+  padding: 7px 8px;
+  color: rgb(8, 9, 10);
+  box-shadow: none;
+  margin-left: 10px;
+  width: 25px;
+  text-align: center;
+}
+
+.length-input-error {
+  border-color: rgb(225, 21, 10);
+  box-shadow: 1px 1px 0 #d8360d;
+}
+
+.length-input:focus {
+  background-color: #fff;
+  border-color: #3b49df;
+  box-shadow: 1px 1px 0 #3b49df;
+  outline: none;
+}
+
+.length-input-error:focus {
+  border-color: #d8360d;
+  box-shadow: 1px 1px 0 #d8360d;
+}
+
+.low {
+  color: #d11a1adf;
+}
+
+.medium {
+  color: #dde71e;
+}
+
+.high {
+  color: #227d06;
 }

@@ -16,6 +16,8 @@ const emptyPassword: PASSWORD = {
   strength: "low",
 };
 
+const isError = (password: PASSWORD) => password.password !== "";
+
 function App() {
   const [config, setConfig] = useState<CONFIG>(defaultConfig);
   const [length, setLength] = useState<number>(0);
@@ -24,23 +26,17 @@ function App() {
     [config]
   );
   const [password, error] = useMemo<[PASSWORD, ERROR]>(() => {
-    if (length > 0 && length < 129) {
+    if (length > 0 && length < 128) {
       return [generatePassword(length), { message: "" }];
+    }
+    if (Number.isNaN(length)) {
+      return [emptyPassword, { message: "Enter a number" }];
     }
     if (length < 0) {
       return [emptyPassword, { message: "Enter number greater than zero" }];
     }
-    return [emptyPassword, { message: "Enter number less than 129" }];
+    return [emptyPassword, { message: "Enter number less than 128" }];
   }, [generatePassword, length]);
-
-  const color = useMemo(() => {
-    if (password.strength === "low") {
-      return "red";
-    } else if (password.strength === "medium") {
-      return "yellow";
-    }
-    return "green";
-  }, [password]);
 
   // Add Error Message
 
@@ -106,18 +102,22 @@ function App() {
             </label>
           </div>
         </div>
-        <div>
+        <div className="number-input">
+          <label>Enter Length</label>
           <input
-            type="number"
+            className={`length-input${
+              error.message !== "" ? " length-input-error" : ""
+            }`}
             placeholder="Enter Length"
             onChange={(e) => {
               setLength(parseInt(e.target.value, 10));
             }}
           />
-          <label>Enter Password Length</label>
         </div>
-        <div style={{ color }}>{password.password}</div>
-        <div>{password.password !== "" ? password.strength : ""}</div>
+        <div className={password.strength}>
+          {isError(password) ? password.password : error.message}
+        </div>
+        <div>{isError(password) ? password.strength : ""}</div>
       </div>
     </div>
   );
