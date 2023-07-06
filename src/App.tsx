@@ -108,7 +108,7 @@ function App() {
             className={`length-input${
               error.message !== "" ? " length-input-error" : ""
             }`}
-            placeholder="Enter Length"
+            placeholder="123"
             onChange={(e) => {
               setLength(parseInt(e.target.value, 10));
             }}
