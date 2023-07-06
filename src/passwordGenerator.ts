@@ -106,16 +106,24 @@ export type PASSWORD = {
 
 export const passwordGeneratorFactory = (config: CONFIG = defaultConfig) => {
   let passwordChoice = [...SMALL_CHAR_ARRAY];
+  let low = 14;
+  let medium = 24;
   if (config.isCapsAllowed) {
     passwordChoice = [...passwordChoice, ...BIG_CHAR_ARRAY];
+    low -= 2;
+    medium -= 2;
   }
 
   if (config.isSpecialAllowed) {
     passwordChoice = [...passwordChoice, ...SPECIAL_ARRAY];
+    low -= 2;
+    medium -= 2;
   }
 
   if (config.isNumbersAllowed) {
     passwordChoice = [...passwordChoice, ...NUMBER_ARRAY];
+    low -= 2;
+    medium -= 2;
   }
   const choiceLen = passwordChoice.length;
 
@@ -132,9 +140,9 @@ export const passwordGeneratorFactory = (config: CONFIG = defaultConfig) => {
 
     let strength: "low" | "medium" | "high";
 
-    if (length < 8) {
+    if (length < low) {
       strength = "low";
-    } else if (length >= 8 && length < 16) {
+    } else if (length >= low && length < medium) {
       strength = "medium";
     } else {
       strength = "high";

@@ -1,7 +1,6 @@
 .card {
-  min-width: 600px;
-  width: fit-content;
-  height: 300px;
+  width: 600px;
+  height: 400px;
   background-color: rgb(255, 255, 255);
   text-align: center;
   padding: 20px;
@@ -58,4 +57,16 @@
 
 .high {
   color: #227d06;
+}
+
+.copy-pressed {
+  color: grey;
+}
+
+.clickable:hover {
+  cursor: pointer;
+}
+
+.message {
+  color: black;
 }

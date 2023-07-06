@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   defaultConfig,
   passwordGeneratorFactory,
@@ -7,6 +7,7 @@ import {
 } from "./passwordGenerator";
 import "./App.css";
 import Checkbox from "./components/Checkbox";
+import { TbCopy, TbCopyOff } from "react-icons/tb";
 
 type ERROR = {
   message: string;
@@ -17,7 +18,7 @@ const emptyPassword: PASSWORD = {
   strength: "low",
 };
 
-const isError = (password: PASSWORD) => password.password !== "";
+const isNotError = (password: PASSWORD) => password.password !== "";
 
 function App() {
   const [config, setConfig] = useState<CONFIG>(defaultConfig);
@@ -26,18 +27,40 @@ function App() {
     () => passwordGeneratorFactory(config),
     [config]
   );
+  const [isFirst, setIsFirst] = useState(true);
+  const [copyPressed, setCopyPressed] = useState(false);
   const [password, error] = useMemo<[PASSWORD, ERROR]>(() => {
     if (length > 0 && length < 128) {
+      if (isFirst) setIsFirst(false);
+      setCopyPressed(false);
       return [generatePassword(length), { message: "" }];
     }
     if (Number.isNaN(length)) {
+      if (isFirst) setIsFirst(false);
       return [emptyPassword, { message: "Enter a number" }];
     }
     if (length < 0) {
+      if (isFirst) setIsFirst(false);
       return [emptyPassword, { message: "Enter number greater than zero" }];
     }
     return [emptyPassword, { message: "Enter number less than 128" }];
-  }, [generatePassword, length]);
+  }, [generatePassword, isFirst, length]);
+
+  useEffect(() => {
+    if (copyPressed) {
+      const timeout = setTimeout(() => {
+        setCopyPressed(false);
+      }, 1000);
+      return () => {
+        clearTimeout(timeout);
+      };
+    }
+  }, [copyPressed]);
+
+  const copyHandler = async () => {
+    await navigator.clipboard.writeText(password.password);
+    setCopyPressed(true);
+  };
 
   // Add Error Message
 
@@ -89,10 +112,10 @@ function App() {
           />
         </div>
         <div className="number-input">
-          <label>Enter Length</label>
+          <label>Length</label>
           <input
             className={`length-input${
-              error.message !== "" ? " length-input-error" : ""
+              error.message !== "" && !isFirst ? " length-input-error" : ""
             }`}
             maxLength={3}
             placeholder="123"
@@ -101,10 +124,46 @@ function App() {
             }}
           />
         </div>
-        <div className={password.strength}>
-          {isError(password) ? password.password : error.message}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "5px",
+            marginBottom: "20px",
+            height: "fit-content",
+          }}
+        >
+          <div
+            style={{
+              width: "fit-content",
+              maxWidth: "60%",
+              wordWrap: "break-word",
+            }}
+            className={isFirst ? "message" : password.strength}
+          >
+            {isNotError(password)
+              ? password.password
+              : isFirst
+              ? "Enter a length to get started."
+              : error.message}
+          </div>
+          <div style={{ marginLeft: "5px", fontSize: "25px" }}>
+            {isNotError(password) ? (
+              <TbCopy
+                className={`${copyPressed ? "copy-pressed" : "clickable"}`}
+                onClick={() => {
+                  if (!copyPressed) copyHandler();
+                }}
+              />
+            ) : (
+              <TbCopyOff />
+            )}
+          </div>
         </div>
-        <div>{isError(password) ? password.strength : ""}</div>
+
+        <div style={{ fontSize: "5px" }}>
+          {isNotError(password) ? `Strength - ${password.strength}` : ""}
+        </div>
       </div>
     </div>
   );
