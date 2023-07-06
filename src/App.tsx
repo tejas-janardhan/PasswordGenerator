@@ -6,6 +6,7 @@ import {
   CONFIG,
 } from "./passwordGenerator";
 import "./App.css";
+import Checkbox from "./components/Checkbox";
 
 type ERROR = {
   message: string;
@@ -53,54 +54,39 @@ function App() {
       <div className="card">
         <p className="heading">Password Generator</p>
         <div>
-          <div className="checkbox-wrapper-24">
-            <input
-              type="checkbox"
-              className="checkbox"
-              id="number-checkbox"
-              checked={config.isNumbersAllowed}
-              onChange={(e) => {
-                setConfig({
-                  ...config,
-                  isNumbersAllowed: !config.isNumbersAllowed,
-                });
-              }}
-            />
-            <label className="checkbox" htmlFor="number-checkbox">
-              <span></span>Allow Numbers
-            </label>
-          </div>
-          <div className="checkbox-wrapper-24">
-            <input
-              type="checkbox"
-              className="checkbox"
-              id="caps-checkbox"
-              checked={config.isCapsAllowed}
-              onChange={(e) => {
-                setConfig({ ...config, isCapsAllowed: !config.isCapsAllowed });
-              }}
-            />
-            <label className="checkbox" htmlFor="caps-checkbox">
-              <span></span>Allow Caps
-            </label>
-          </div>
-          <div className="checkbox-wrapper-24">
-            <input
-              type="checkbox"
-              className="checkbox"
-              id="special-checkbox"
-              checked={config.isSpecialAllowed}
-              onChange={(e) => {
-                setConfig({
-                  ...config,
-                  isSpecialAllowed: !config.isSpecialAllowed,
-                });
-              }}
-            />
-            <label className="checkbox" htmlFor="special-checkbox">
-              <span></span>Allow Special Characters
-            </label>
-          </div>
+          <Checkbox
+            id="number-checkbox"
+            text="Allow Numbers"
+            checked={config.isNumbersAllowed}
+            toggleChecked={() =>
+              setConfig({
+                ...config,
+                isNumbersAllowed: !config.isNumbersAllowed,
+              })
+            }
+          />
+          <Checkbox
+            id="caps-checkbox"
+            text="Allow Caps"
+            checked={config.isCapsAllowed}
+            toggleChecked={() =>
+              setConfig({
+                ...config,
+                isCapsAllowed: !config.isCapsAllowed,
+              })
+            }
+          />
+          <Checkbox
+            id="special-checkbox"
+            text="Allow Special Characters"
+            checked={config.isSpecialAllowed}
+            toggleChecked={() =>
+              setConfig({
+                ...config,
+                isSpecialAllowed: !config.isSpecialAllowed,
+              })
+            }
+          />
         </div>
         <div className="number-input">
           <label>Enter Length</label>
@@ -108,6 +94,7 @@ function App() {
             className={`length-input${
               error.message !== "" ? " length-input-error" : ""
             }`}
+            maxLength={3}
             placeholder="123"
             onChange={(e) => {
               setLength(parseInt(e.target.value, 10));
