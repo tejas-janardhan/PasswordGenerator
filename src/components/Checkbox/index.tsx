@@ -1,12 +1,19 @@
 import React from "react";
 import "./Checkbox.css";
 
-const Checkbox: React.FC<{
+type CheckboxProps = {
   id: string;
   text: string;
   checked: boolean;
   toggleChecked: () => void;
-}> = ({ id, text, checked, toggleChecked }) => {
+};
+
+const Checkbox: React.FC<CheckboxProps> = ({
+  id,
+  text,
+  checked,
+  toggleChecked,
+}) => {
   return (
     <div className="checkbox-wrapper-24">
       <input
